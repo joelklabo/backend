@@ -1,4 +1,8 @@
 class UserController < ApplicationController
+
+  def index
+    render json: User.all
+  end
   
   def create
 
@@ -8,7 +12,7 @@ class UserController < ApplicationController
     if @user.save
       render json: @user, status: 201 
     else
-      render json: params[:user], status: 406 
+      render json: @user.errors, status: 406 
     end
 
   end
@@ -16,11 +20,7 @@ class UserController < ApplicationController
   private
 
   def user_params
-
-    { :name  => params[:name], 
-      :email => params[:email], 
-      :password_hash => nil }  if User.valid_password(params[:password])
-
+    params.require(:user).permit(:name, :email, :password_hash)
   end
 
 end
